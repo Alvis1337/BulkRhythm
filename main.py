@@ -1,16 +1,15 @@
 import time
-
+import os
 from selenium.common import NoSuchElementException
+from dotenv import load_dotenv
 
-from query_builder import QueryBuilder
-from price_calculator import ParseDownloads
+from download_files import ParseDownloads
 
-query_builder = QueryBuilder()
+load_dotenv()
 
-PRICE_FILE = "songs_downloaded.json"
 CHECK_INTERVAL = 600
 
-SEARCH_URL = 'https://rhythmverse.co/songfiles/game/rb3xbox'
+SEARCH_URL = os.getenv('SEARCH_URL')
 
 def main():
     while True:

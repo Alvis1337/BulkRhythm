@@ -7,20 +7,34 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ParseDownloads:
     @staticmethod
+    def load_downloaded_songs(filename):
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                return set(json.load(file))
+        return set()
+
+    @staticmethod
+    def save_downloaded_songs(downloaded_songs, filename):
+        with open(filename, 'w') as file:
+            json.dump(list(downloaded_songs), file)
+
+    @staticmethod
     def start_downloads(search_url):
         options = Options()
-        # options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        driver = webdriver.Chrome(service=Service("C:\\Users\\alvis\\Downloads\\chromedriver-win64\\chromedriver.exe"), options=options)
 
-        downloaded_songs = set()
+        driver_path = os.getenv('CHROMEDRIVER_PATH')
+        driver = webdriver.Chrome(service=Service(driver_path), options=options)
+
+        downloaded_songs_file = os.getenv('DOWNLOAD_SONGS_FILE', 'downloaded_songs.json')
+        downloaded_songs = ParseDownloads.load_downloaded_songs(downloaded_songs_file)
 
         try:
             while True:
@@ -57,6 +71,7 @@ class ParseDownloads:
                         download_button.click()
 
                         downloaded_songs.add(song_name)
+                        ParseDownloads.save_downloaded_songs(downloaded_songs, downloaded_songs_file)
                         print(f"Started downloading: {song_name}")
 
                         time.sleep(8)
