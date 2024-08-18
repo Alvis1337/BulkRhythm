@@ -1,5 +1,4 @@
 import time
-import os
 from selenium.common import NoSuchElementException
 from dotenv import load_dotenv
 
@@ -8,8 +7,6 @@ from download_files import ParseDownloads
 load_dotenv()
 
 CHECK_INTERVAL = 600
-
-SEARCH_URL = os.getenv('SEARCH_URL')
 
 def main():
     while True:
