@@ -14,7 +14,7 @@ SEARCH_URL = os.getenv('SEARCH_URL')
 def main():
     while True:
         try:
-            ParseDownloads.start_downloads(SEARCH_URL)
+            ParseDownloads.start_downloads()
 
             time.sleep(CHECK_INTERVAL)
         except NoSuchElementException:
